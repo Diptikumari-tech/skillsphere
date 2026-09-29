@@ -1,0 +1,272 @@
+/* Main Page */
+.onboarding-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+  background: #f5f7fb;
+  box-sizing: border-box;
+}
+
+/* Main Card */
+.onboarding-container {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* Progress Bar */
+.onboarding-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.progress-step {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  color: #6b7280;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.progress-step.active {
+  background: #2563eb;
+  color: white;
+}
+
+.progress-line {
+  width: 100px;
+  height: 4px;
+  background: #e5e7eb;
+}
+
+.step-text {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 25px;
+}
+
+/* Content */
+.onboarding-content {
+  text-align: center;
+}
+
+.onboarding-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.onboarding-content h1 {
+  margin: 0 0 10px;
+  color: #1f2937;
+  font-size: 28px;
+}
+
+.onboarding-content > p {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+/* Form */
+.form-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 7px;
+  color: #374151;
+}
+
+.form-group label span {
+  color: #9ca3af;
+  font-weight: normal;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.skill-input-box input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.skill-input-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+/* Skills Input */
+.skill-input-box {
+  display: flex;
+  gap: 10px;
+}
+
+.skill-input-box button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.skill-input-box button:hover {
+  background: #1d4ed8;
+}
+
+/* Skills */
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.onboarding-skill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.teach-skill {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.learn-skill {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.onboarding-skill button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.skill-help {
+  margin-top: 20px;
+  color: #9ca3af;
+}
+
+/* Error */
+.onboarding-error {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.onboarding-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 35px;
+}
+
+.back-btn,
+.next-btn,
+.finish-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+.back-btn {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.back-btn:hover {
+  background: #d1d5db;
+}
+
+.next-btn,
+.finish-btn {
+  background: #2563eb;
+  color: white;
+  margin-left: auto;
+}
+
+.next-btn:hover,
+.finish-btn:hover {
+  background: #1d4ed8;
+}
+
+.finish-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .onboarding-container {
+    padding: 25px 20px;
+  }
+
+  .progress-line {
+    width: 50px;
+  }
+
+  .onboarding-content h1 {
+    font-size: 23px;
+  }
+
+  .skill-input-box {
+    flex-direction: column;
+  }
+
+  .skill-input-box button {
+    width: 100%;
+  }
+
+  .onboarding-buttons {
+    margin-top: 25px;
+  }
+}

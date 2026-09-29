@@ -1,0 +1,753 @@
+
+/* =====================================================
+   PUBLIC PROFILE
+===================================================== */
+
+.public-profile-page {
+  min-height: 100vh;
+  padding: 30px;
+  background: #f5f7fb;
+  color: #172033;
+}
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
+
+.public-back-btn {
+  max-width: 1200px;
+  margin: 0 auto 18px;
+  display: block;
+
+  border: none;
+  background: transparent;
+
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.public-back-btn:hover {
+  color: #2563eb;
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.public-profile-hero {
+  max-width: 1200px;
+  margin: 0 auto 22px;
+
+  padding: 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  box-shadow:
+    0 8px 25px rgba(
+      15,
+      23,
+      42,
+      0.05
+    );
+}
+
+.public-profile-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.public-profile-image,
+.public-profile-avatar {
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.public-profile-image {
+  object-fit: cover;
+  border: 4px solid #eef2ff;
+}
+
+.public-profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-name-row h1 {
+  margin: 0;
+
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.verified-badge {
+  width: 21px;
+  height: 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+  color: white;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.profile-email {
+  margin: 6px 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+.profile-location,
+.profile-education {
+  display: inline-block;
+
+  margin-right: 14px;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.public-connect-btn {
+  padding: 12px 22px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #2563eb;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.public-connect-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.public-connect-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+.public-profile-message {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+
+  padding: 13px 16px;
+
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  border-radius: 10px;
+
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+
+  color: #1d4ed8;
+
+  font-size: 14px;
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.public-profile-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    1.5fr 1fr;
+
+  gap: 20px;
+}
+
+.public-profile-left,
+.public-profile-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.public-card {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 17px;
+
+  padding: 22px;
+
+  box-shadow:
+    0 6px 20px rgba(
+      15,
+      23,
+      42,
+      0.04
+    );
+}
+
+.card-title {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.card-title > span {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #eef4ff;
+
+  font-size: 18px;
+}
+
+.card-title h2 {
+  margin: 0;
+
+  font-size: 18px;
+}
+
+.card-title p {
+  margin: 4px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+/* =====================================================
+   BIO
+===================================================== */
+
+.bio-text {
+  margin: 0;
+
+  color: #475569;
+
+  font-size: 14px;
+
+  line-height: 1.8;
+}
+
+/* =====================================================
+   SKILLS
+===================================================== */
+
+.skills-group {
+  margin-top: 18px;
+}
+
+.skills-group h3 {
+  margin: 0 0 10px;
+
+  font-size: 13px;
+
+  color: #334155;
+}
+
+.public-skills {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.public-skill {
+  padding: 7px 11px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.public-skill.offered {
+  background: #ecfdf5;
+  color: #047857;
+
+  border: 1px solid #a7f3d0;
+}
+
+.public-skill.requested {
+  background: #eff6ff;
+  color: #1d4ed8;
+
+  border: 1px solid #bfdbfe;
+}
+
+.no-data {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+/* =====================================================
+   CAREER
+===================================================== */
+
+.career-box {
+  padding: 15px;
+
+  border-radius: 11px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+}
+
+.career-box span {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  margin-bottom: 5px;
+}
+
+.career-box strong {
+  font-size: 15px;
+
+  color: #334155;
+}
+
+/* =====================================================
+   RATING
+===================================================== */
+
+.rating-card {
+  text-align: center;
+}
+
+.rating-number {
+  font-size: 31px;
+
+  font-weight: 800;
+
+  color: #f59e0b;
+}
+
+.rating-card h3 {
+  margin: 5px 0;
+
+  font-size: 16px;
+}
+
+.rating-card p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.stars {
+  margin-top: 10px;
+
+  letter-spacing: 3px;
+
+  color: #f59e0b;
+
+  font-size: 18px;
+}
+
+/* =====================================================
+   EDUCATION
+===================================================== */
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.info-list div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid #eef2f7;
+}
+
+.info-list div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.info-list span {
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+.info-list strong {
+  color: #334155;
+
+  font-size: 13px;
+}
+
+/* =====================================================
+   AVAILABILITY
+===================================================== */
+
+.availability-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.availability-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  background: #f8fafc;
+}
+
+.availability-item > span {
+  font-size: 20px;
+}
+
+.availability-item small {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 10px;
+
+  margin-bottom: 3px;
+}
+
+.availability-item strong {
+  font-size: 13px;
+
+  color: #334155;
+}
+
+/* =====================================================
+   REVIEWS
+===================================================== */
+
+.reviews-card {
+  max-width: 1200px;
+
+  margin: 20px auto 0;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.review-item {
+  padding: 16px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  background: #fafafa;
+}
+
+.review-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 10px;
+}
+
+.review-avatar {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e0e7ff;
+
+  color: #3730a3;
+
+  font-weight: 700;
+}
+
+.review-header h3 {
+  margin: 0 0 3px;
+
+  font-size: 14px;
+}
+
+.review-header span {
+  font-size: 12px;
+}
+
+.review-item > p {
+  margin: 0;
+
+  color: #475569;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+.no-reviews {
+  text-align: center;
+
+  padding: 25px;
+}
+
+.no-reviews div {
+  font-size: 30px;
+
+  margin-bottom: 8px;
+}
+
+.no-reviews h3 {
+  margin: 0 0 5px;
+}
+
+.no-reviews p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.public-profile-loading {
+  min-height: 70vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.public-profile-spinner {
+  width: 44px;
+  height: 44px;
+
+  border: 4px solid #e2e8f0;
+
+  border-top-color: #2563eb;
+
+  border-radius: 50%;
+
+  animation: publicSpin 0.8s linear infinite;
+
+  margin-bottom: 15px;
+}
+
+.public-profile-loading h2 {
+  margin: 0;
+
+  font-size: 20px;
+}
+
+.public-profile-loading p {
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+@keyframes publicSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   NOT FOUND
+===================================================== */
+
+.public-profile-empty {
+  min-height: 70vh;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.empty-profile-icon {
+  width: 70px;
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eef4ff;
+
+  font-size: 30px;
+
+  margin-bottom: 15px;
+}
+
+.public-profile-empty h2 {
+  margin: 0 0 8px;
+}
+
+.public-profile-empty p {
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+.public-profile-empty button {
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 850px) {
+
+  .public-profile-page {
+    padding: 18px;
+  }
+
+  .public-profile-hero {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .public-connect-btn {
+    width: 100%;
+  }
+
+  .public-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .public-profile-main {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .public-profile-image,
+  .public-profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-name-row h1 {
+    font-size: 23px;
+  }
+
+}
+

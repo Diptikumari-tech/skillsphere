@@ -1,0 +1,116 @@
+.sessions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sessions-hero {
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(14, 165, 233, 0.08) 100%);
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.active-filter {
+  background: var(--primary) !important;
+  color: white !important;
+  border-color: var(--primary) !important;
+}
+
+.sessions-alert {
+  padding: 1rem 1.25rem;
+  background: rgba(16, 185, 129, 0.15);
+  color: #065f46;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+}
+
+body.dark .sessions-alert { color: #34d399; }
+
+.sessions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.session-card {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.session-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.status-scheduled { background: rgba(99, 102, 241, 0.15); color: var(--primary); }
+.status-completed { background: var(--success-bg); color: #065f46; }
+.status-cancelled { background: rgba(244, 63, 94, 0.15); color: var(--accent); }
+
+body.dark .status-completed { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+.duration-tag {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.session-card h3 {
+  font-size: 1.2rem;
+}
+
+.peer-details {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(248, 250, 252, 0.5);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+}
+
+body.dark .peer-details { background: rgba(30, 41, 59, 0.5); }
+
+.peer-details p {
+  font-size: 0.8rem;
+}
+
+.date-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.85rem;
+}
+
+.date-box span { color: var(--text-muted); }
+
+.session-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  align-items: center;
+}
+
+.completed-badge {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--success);
+}
