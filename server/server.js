@@ -1,8 +1,9 @@
 import express from "express";
 import http from "http";
-import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
+
+import { initSocket } from "./socket/socketHandler.js";
 
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -81,80 +82,8 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// Configure Socket.io
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
-
-const onlineUsers = new Map(); // userId -> socketId
-
-io.on("connection", (socket) => {
-  console.log(`⚡ Socket connected: ${socket.id}`);
-
-  socket.on("setup", (userData) => {
-    if (userData && userData._id) {
-      socket.userId = userData._id;
-      socket.join(userData._id);
-      onlineUsers.set(userData._id, socket.id);
-      socket.emit("connected");
-      io.emit("online_users", Array.from(onlineUsers.keys()));
-      console.log(`👤 User ${userData._id} joined personal socket room`);
-    }
-  });
-
-  socket.on("join_chat", (chatId) => {
-    socket.join(chatId);
-    console.log(`💬 User joined chat room: ${chatId}`);
-  });
-
-  socket.on("leave_chat", (chatId) => {
-    socket.leave(chatId);
-    console.log(`💬 User left chat room: ${chatId}`);
-  });
-
-  socket.on("new_message", (newMessageReceived) => {
-    const chat = typeof newMessageReceived.chat === "object" ? newMessageReceived.chat._id : newMessageReceived.chat;
-    if (!chat) return;
-
-    socket.to(chat).emit("message_received", newMessageReceived);
-    if (newMessageReceived.receiver) {
-      socket.to(newMessageReceived.receiver).emit("message_notification", newMessageReceived);
-    }
-  });
-
-  socket.on("typing", (data) => {
-    const chatId = typeof data === "string" ? data : data.chatId;
-    socket.to(chatId).emit("typing", data);
-  });
-
-  socket.on("stop_typing", (data) => {
-    const chatId = typeof data === "string" ? data : data.chatId;
-    socket.to(chatId).emit("stop_typing", data);
-  });
-
-  socket.on("send_notification", (notification) => {
-    if (notification && notification.recipient) {
-      socket.to(notification.recipient).emit("new_notification", notification);
-    }
-  });
-
-  socket.on("session_created", (session) => {
-    if (session && session.participant) {
-      socket.to(session.participant).emit("session_created", session);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    if (socket.userId) {
-      onlineUsers.delete(socket.userId);
-      io.emit("online_users", Array.from(onlineUsers.keys()));
-    }
-    console.log(`❌ Socket disconnected: ${socket.id}`);
-  });
-});
+// Configure Socket.io via modular handler
+initSocket(server);
 
 // Error handling middleware
 app.use(notFound);
