@@ -80,7 +80,6 @@ function Profile() {
     reader.onload = (event) => {
       const img = new Image();
       img.onload = () => {
-        // Compress & resize image to 300x300 canvas for fast loading
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         const MAX_WIDTH = 300;
@@ -108,7 +107,7 @@ function Profile() {
         const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
         setAvatarPreview(dataUrl);
         setProfile((prev) => ({ ...prev, avatar: dataUrl }));
-        setMessage("Image selected! Click 'Save Profile' to apply changes.");
+        setMessage("📷 Profile photo loaded! Click 'Save Profile' to apply changes.");
       };
       img.src = event.target.result;
     };
@@ -143,16 +142,16 @@ function Profile() {
   };
 
   return (
-    <div className="profile-container">
-      {/* COVER BANNER */}
-      <section className="profile-cover-card glass-card">
-        <div className="profile-cover-bg"></div>
-        <div className="profile-cover-content">
-          <div className="avatar-upload-wrapper">
+    <div className="profile-page-wrapper">
+      {/* 1. HERO COVER BANNER */}
+      <section className="profile-cover-card">
+        <div className="profile-cover-banner"></div>
+        <div className="profile-cover-body">
+          <div className="avatar-preview-box">
             <Avatar src={avatarPreview} name={profile.name} size="huge" />
             <button
               type="button"
-              className="change-avatar-btn"
+              className="btn-camera-overlay"
               onClick={() => fileInputRef.current?.click()}
               title="Change Profile Photo"
             >
@@ -160,15 +159,19 @@ function Profile() {
             </button>
           </div>
 
-          <div className="profile-hero-info">
-            <h1>{profile.name || "My Student Profile"}</h1>
-            <p>{currentUser?.email}</p>
-            <span className="college-tag">
-              🎓 {profile.college || "University Student"}{" "}
-              {profile.course ? `• ${profile.course}` : ""}
-            </span>
+          <div className="profile-header-details">
+            <h1 className="profile-user-name">{profile.name || "Student Profile"}</h1>
+            <p className="profile-user-email">✉️ {currentUser?.email}</p>
+            <div className="profile-badge-tags">
+              <span className="badge-tag college-badge">
+                🎓 {profile.college || "University Student"}{" "}
+                {profile.course ? `• ${profile.course}` : ""}
+              </span>
+              {profile.year && <span className="badge-tag year-badge">📅 {profile.year}</span>}
+              {profile.location && <span className="badge-tag loc-badge">📍 {profile.location}</span>}
+            </div>
 
-            <div className="photo-action-buttons">
+            <div className="photo-actions-row">
               <input
                 type="file"
                 ref={fileInputRef}
@@ -178,7 +181,7 @@ function Profile() {
               />
               <button
                 type="button"
-                className="btn-secondary btn-sm"
+                className="btn-photo-upload"
                 onClick={() => fileInputRef.current?.click()}
               >
                 Upload Photo 📷
@@ -186,7 +189,7 @@ function Profile() {
               {avatarPreview && (
                 <button
                   type="button"
-                  className="btn-danger-sm"
+                  className="btn-photo-remove"
                   onClick={handleRemovePhoto}
                 >
                   Remove Photo ✕
@@ -195,33 +198,41 @@ function Profile() {
             </div>
           </div>
 
-          <div className="rating-badge-box">
-            <span className="rating-val">⭐ {currentUser?.rating?.average || "5.0"}</span>
-            <span className="rating-lbl">Peer Trust Rating</span>
+          <div className="trust-rating-box">
+            <span className="trust-val">⭐ {currentUser?.rating?.average || "5.0"}</span>
+            <span className="trust-lbl">Peer Trust Score</span>
           </div>
         </div>
       </section>
 
-      {message && <div className="profile-alert">{message}</div>}
+      {message && <div className="profile-toast-alert">{message}</div>}
 
-      {/* EDIT PROFILE FORM */}
-      <form onSubmit={handleSubmit} className="profile-edit-form">
-        {/* SECTION 1: BASIC INFORMATION */}
-        <div className="form-card glass-card">
-          <h2>👤 Basic Information</h2>
-          <div className="form-grid">
-            <div className="form-group">
+      {/* 2. EDIT PROFILE FORM */}
+      <form onSubmit={handleSubmit} className="profile-form-grid">
+        {/* SECTION 1: PERSONAL INFORMATION */}
+        <div className="profile-section-card">
+          <div className="card-section-title">
+            <span className="title-icon">👤</span>
+            <div>
+              <h3>Personal Information</h3>
+              <p>Manage your public display name, location, and bio</p>
+            </div>
+          </div>
+
+          <div className="form-fields-grid">
+            <div className="field-block">
               <label>Full Name</label>
               <input
                 type="text"
                 name="name"
                 value={profile.name}
                 onChange={handleChange}
+                placeholder="John Doe"
                 required
               />
             </div>
 
-            <div className="form-group">
+            <div className="field-block">
               <label>Location / City</label>
               <input
                 type="text"
@@ -232,35 +243,43 @@ function Profile() {
               />
             </div>
 
-            <div className="form-group full-width">
+            <div className="field-block full-width">
               <label>Personal Bio & Learning Goals</label>
               <textarea
                 rows="3"
                 name="bio"
-                placeholder="Tell other students about your passions and project interests..."
+                placeholder="Tell other students about your passions, skills, and project goals..."
                 value={profile.bio}
                 onChange={handleChange}
               />
+              <small className="field-hint">Brief introduction displayed on your public partner card</small>
             </div>
           </div>
         </div>
 
-        {/* SECTION 2: ACADEMIC DETAILS */}
-        <div className="form-card glass-card">
-          <h2>🎓 Education Details</h2>
-          <div className="form-grid">
-            <div className="form-group">
+        {/* SECTION 2: ACADEMIC & EDUCATION */}
+        <div className="profile-section-card">
+          <div className="card-section-title">
+            <span className="title-icon">🎓</span>
+            <div>
+              <h3>Education & Campus Details</h3>
+              <p>Used to match you with peers in your college or major</p>
+            </div>
+          </div>
+
+          <div className="form-fields-grid">
+            <div className="field-block">
               <label>College / University</label>
               <input
                 type="text"
                 name="college"
-                placeholder="Enter college name"
+                placeholder="e.g. Patna University / IIT"
                 value={profile.college}
                 onChange={handleChange}
               />
             </div>
 
-            <div className="form-group">
+            <div className="field-block">
               <label>Course / Major</label>
               <input
                 type="text"
@@ -271,7 +290,7 @@ function Profile() {
               />
             </div>
 
-            <div className="form-group">
+            <div className="field-block">
               <label>Academic Year</label>
               <select name="year" value={profile.year} onChange={handleChange}>
                 <option value="">Select Year</option>
@@ -284,11 +303,61 @@ function Profile() {
           </div>
         </div>
 
-        {/* SECTION 3: SOCIAL PORTFOLIO LINKS */}
-        <div className="form-card glass-card">
-          <h2>🌐 Portfolio & Social Media Links</h2>
-          <div className="form-grid">
-            <div className="form-group">
+        {/* SECTION 3: SKILLS PREVIEW */}
+        <div className="profile-section-card">
+          <div className="card-section-title">
+            <span className="title-icon">🧠</span>
+            <div>
+              <h3>Active Skills Portfolio</h3>
+              <p>Skills you offer to teach and skills you want to learn</p>
+            </div>
+          </div>
+
+          <div className="skills-overview-container">
+            <div className="skills-overview-column">
+              <span className="column-label label-teach">Teaches (Skills Offered):</span>
+              <div className="pills-cloud">
+                {currentUser?.teachSkills?.length > 0 ? (
+                  currentUser.teachSkills.map((s, idx) => (
+                    <span key={idx} className="pill-chip chip-teach">
+                      {s.name || s}
+                    </span>
+                  ))
+                ) : (
+                  <span className="no-skills-tag">No teaching skills added yet</span>
+                )}
+              </div>
+            </div>
+
+            <div className="skills-overview-column">
+              <span className="column-label label-learn">Wants to Learn:</span>
+              <div className="pills-cloud">
+                {currentUser?.learnSkills?.length > 0 ? (
+                  currentUser.learnSkills.map((s, idx) => (
+                    <span key={idx} className="pill-chip chip-learn">
+                      {s.name || s}
+                    </span>
+                  ))
+                ) : (
+                  <span className="no-skills-tag">No learning goals added yet</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 4: SOCIAL & PORTFOLIO LINKS */}
+        <div className="profile-section-card">
+          <div className="card-section-title">
+            <span className="title-icon">🌐</span>
+            <div>
+              <h3>Portfolio & Social Links</h3>
+              <p>Help peer partners verify your projects and code repositories</p>
+            </div>
+          </div>
+
+          <div className="form-fields-grid">
+            <div className="field-block">
               <label>GitHub Profile URL</label>
               <input
                 type="url"
@@ -299,7 +368,7 @@ function Profile() {
               />
             </div>
 
-            <div className="form-group">
+            <div className="field-block">
               <label>LinkedIn Profile URL</label>
               <input
                 type="url"
@@ -310,7 +379,7 @@ function Profile() {
               />
             </div>
 
-            <div className="form-group">
+            <div className="field-block">
               <label>Twitter / X Profile URL</label>
               <input
                 type="url"
@@ -321,8 +390,8 @@ function Profile() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Personal Portfolio Website</label>
+            <div className="field-block">
+              <label>Personal Website / Portfolio</label>
               <input
                 type="url"
                 name="portfolio"
@@ -334,8 +403,8 @@ function Profile() {
           </div>
         </div>
 
-        <div className="form-actions">
-          <button type="submit" disabled={saving} className="btn-primary">
+        <div className="profile-actions-bar">
+          <button type="submit" disabled={saving} className="btn-save-profile">
             {saving ? "Saving Changes..." : "Save Profile & Picture 💾"}
           </button>
         </div>
