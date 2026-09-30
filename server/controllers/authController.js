@@ -6,7 +6,7 @@ import generateToken from "../utils/generateToken.js";
 // @access  Public
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, college, course, year } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, message: "Please provide all required fields" });
@@ -22,6 +22,9 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password,
+      college: college || "",
+      course: course || "",
+      year: year || "",
     });
 
     if (user) {
@@ -31,7 +34,11 @@ export const registerUser = async (req, res) => {
           _id: user._id,
           name: user.name,
           email: user.email,
+          college: user.college,
+          course: user.course,
+          year: user.year,
           role: user.role,
+          avatar: user.avatar,
           onboardingCompleted: user.onboardingCompleted,
           teachSkills: user.teachSkills,
           learnSkills: user.learnSkills,

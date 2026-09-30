@@ -50,8 +50,8 @@ export function AuthProvider({ children }) {
     throw new Error(response.data?.message || "Login failed");
   };
 
-  const register = async (name, email, password) => {
-    const response = await api.post("/auth/register", { name, email, password });
+  const register = async (name, email, password, college = "", course = "", year = "") => {
+    const response = await api.post("/auth/register", { name, email, password, college, course, year });
     if (response.data && response.data.success) {
       localStorage.setItem("skillsphere_token", response.data.token);
       setCurrentUser(response.data.user);

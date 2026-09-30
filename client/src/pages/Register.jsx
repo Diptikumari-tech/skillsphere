@@ -6,6 +6,9 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [college, setCollege] = useState("");
+  const [course, setCourse] = useState("");
+  const [year, setYear] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +21,7 @@ function Register() {
       setError("");
       setLoading(true);
 
-      await register(name, email, password);
+      await register(name, email, password, college, course, year);
       navigate("/onboarding");
     } catch (err) {
       console.error("Register error:", err);
@@ -38,7 +41,7 @@ function Register() {
 
         <form onSubmit={handleRegister} className="auth-form">
           <div className="form-group">
-            <label>Full Name</label>
+            <label>Full Name *</label>
             <input
               type="text"
               placeholder="John Doe"
@@ -49,7 +52,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label>Email Address</label>
+            <label>Email Address *</label>
             <input
               type="email"
               placeholder="name@example.com"
@@ -60,7 +63,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label>Password</label>
+            <label>Password *</label>
             <input
               type="password"
               placeholder="At least 6 characters"
@@ -69,6 +72,37 @@ function Register() {
               minLength={6}
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label>College / University (Optional)</label>
+            <input
+              type="text"
+              placeholder="e.g. Patna University"
+              value={college}
+              onChange={(e) => setCollege(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Course / Major (Optional)</label>
+            <input
+              type="text"
+              placeholder="e.g. BCA / B.Tech Computer Science"
+              value={course}
+              onChange={(e) => setCourse(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Academic Year (Optional)</label>
+            <select value={year} onChange={(e) => setYear(e.target.value)}>
+              <option value="">Select Year</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
           </div>
 
           <button type="submit" disabled={loading} className="btn-primary auth-submit">

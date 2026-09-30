@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import Avatar from "../components/Avatar";
@@ -7,12 +7,13 @@ import "./Matches.css";
 
 function Matches() {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [matchFilter, setMatchFilter] = useState("all"); // 'all', 'high', 'medium'
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [matchFilter, setMatchFilter] = useState("all"); // 'all', 'strong', 'good', 'fair'
+  const [activeTag, setActiveTag] = useState("best");
 
   // Modal State for sending Swap Request
   const [selectedCandidate, setSelectedCandidate] = useState(null);
@@ -46,11 +47,10 @@ function Matches() {
   const openSwapModal = (matchItem) => {
     const candidate = matchItem.user;
     setSelectedCandidate(candidate);
-    
-    // Set default offered & wanted skills
+
     const defaultOffered = currentUser?.teachSkills?.[0]?.name || "General Teaching";
     const defaultWanted = candidate.teachSkills?.[0]?.name || "General Learning";
-    
+
     setOfferedSkill(defaultOffered);
     setWantedSkill(defaultWanted);
     setNote(`Hi ${candidate.name}, I would love to trade ${defaultOffered} for your ${defaultWanted} skill!`);
@@ -97,11 +97,17 @@ function Matches() {
       const college = (u.college || "").toLowerCase();
       const q = search.toLowerCase();
 
-      const matchesSearch = name.includes(q) || college.includes(q);
+      const matchesSearch =
+        name.includes(q) ||
+        college.includes(q) ||
+        u.teachSkills?.some((s) => (s.name || s).toLowerCase().includes(q)) ||
+        u.learnSkills?.some((s) => (s.name || s).toLowerCase().includes(q));
+
       if (!matchesSearch) return false;
 
-      if (matchFilter === "high") return item.matchScore >= 70;
-      if (matchFilter === "medium") return item.matchScore >= 40 && item.matchScore < 70;
+      if (matchFilter === "strong") return item.matchScore >= 80;
+      if (matchFilter === "good") return item.matchScore >= 60 && item.matchScore < 80;
+      if (matchFilter === "fair") return item.matchScore < 60;
 
       return true;
     });
@@ -109,152 +115,207 @@ function Matches() {
 
   if (loading) {
     return (
-      <div className="matches-loading glass-card">
-        <div className="loader"></div>
-        <h2>Calculating Algorithmic Matches...</h2>
-        <p>Analyzing skill sets and learning preferences across the community.</p>
+      <div className="matches-loading-card">
+        <div className="spinner"></div>
+        <h2>Calculating AI Skill Matches...</h2>
+        <p>Analyzing profiles and skill swap compatibility across the network.</p>
       </div>
     );
   }
 
   return (
-    <div className="matches-container">
-      {/* HERO HEADER */}
-      <section className="matches-hero glass-card">
+    <div className="matches-page-container">
+      {/* AI MATCHES HEADER */}
+      <section className="matches-header-section">
         <div>
-          <span className="badge-accent">🤖 AI Recommendations</span>
-          <h1>
-            Discover Your Ideal <span className="highlight-name">Skill Partners</span>
-          </h1>
-          <p>
-            Our recommendation engine pairs your learning goals with peer skill offers.
-          </p>
+          <h1 className="matches-title">AI-Powered Matches</h1>
+          <p className="matches-subtitle">Discover people who complement your skills perfectly</p>
         </div>
-
-        <button className="btn-secondary" onClick={loadMatches}>
-          ↻ Refresh Recommendations
-        </button>
       </section>
 
-      {message && <div className="matches-alert">{message}</div>}
+      {message && <div className="matches-alert-banner">{message}</div>}
 
-      {/* FILTER TOOLBAR */}
-      <div className="toolbar-card glass-card">
-        <div className="search-input-wrapper">
-          <span>🔍</span>
+      {/* FILTER & SEARCH TOOLBAR */}
+      <div className="toolbar-wrapper">
+        <div className="compatibility-tabs">
+          <button
+            className={`tab-btn ${matchFilter === "all" ? "active" : ""}`}
+            onClick={() => setMatchFilter("all")}
+          >
+            All Matches
+          </button>
+          <button
+            className={`tab-btn ${matchFilter === "strong" ? "active" : ""}`}
+            onClick={() => setMatchFilter("strong")}
+          >
+            Strong (80%+)
+          </button>
+          <button
+            className={`tab-btn ${matchFilter === "good" ? "active" : ""}`}
+            onClick={() => setMatchFilter("good")}
+          >
+            Good (60-79%)
+          </button>
+          <button
+            className={`tab-btn ${matchFilter === "fair" ? "active" : ""}`}
+            onClick={() => setMatchFilter("fair")}
+          >
+            Fair (&lt;60%)
+          </button>
+        </div>
+
+        <div className="search-bar-box">
+          <span className="search-icon">🔍</span>
           <input
             type="text"
-            placeholder="Search partners by name, college, or skill..."
+            placeholder="Search skills, people, or tags..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-
-        <div className="filter-group">
-          <label>Match Level:</label>
-          <select value={matchFilter} onChange={(e) => setMatchFilter(e.target.value)}>
-            <option value="all">All Matches ({matches.length})</option>
-            <option value="high">🔥 High Compatibility (70%+)</option>
-            <option value="medium">⚡ Medium Match (40%-70%)</option>
-          </select>
-        </div>
       </div>
 
-      {/* MATCHES CARDS GRID */}
-      <div className="matches-grid">
+      {/* FEATURED TAG PILLS */}
+      <div className="tag-pills-row">
+        <button
+          className={`tag-pill ${activeTag === "best" ? "active" : ""}`}
+          onClick={() => setActiveTag("best")}
+        >
+          ✨ Best match
+        </button>
+        <button
+          className={`tag-pill ${activeTag === "nearby" ? "active" : ""}`}
+          onClick={() => setActiveTag("nearby")}
+        >
+          📍 Within 5 km
+        </button>
+        <button
+          className={`tag-pill ${activeTag === "coding" ? "active" : ""}`}
+          onClick={() => {
+            setActiveTag("coding");
+            setSearch("Coding");
+          }}
+        >
+          💻 Coding
+        </button>
+        <button
+          className={`tag-pill ${activeTag === "music" ? "active" : ""}`}
+          onClick={() => {
+            setActiveTag("music");
+            setSearch("Guitar");
+          }}
+        >
+          🎸 Guitar
+        </button>
+        <button
+          className="tag-pill reset-pill"
+          onClick={() => {
+            setActiveTag("best");
+            setMatchFilter("all");
+            setSearch("");
+          }}
+        >
+          🔄 Reset
+        </button>
+      </div>
+
+      {/* MATCH CARDS GRID */}
+      <div className="matches-cards-grid">
         {filteredMatches.length === 0 ? (
-          <div className="empty-state glass-card" style={{ gridColumn: "1/-1" }}>
-            <span className="empty-icon">🎯</span>
-            <h3>No matches fit your criteria</h3>
-            <p>Try clearing filters or adding more teaching & learning skills to your profile.</p>
-            <Link to="/profile" className="btn-primary">
-              Update Profile Skills
+          <div className="no-matches-box">
+            <span className="no-matches-icon">🎯</span>
+            <h3>No matching skill partners found</h3>
+            <p>Try adjusting your search query or add more skills to your profile.</p>
+            <Link to="/skills" className="btn-add-skills">
+              Add Skills to Profile
             </Link>
           </div>
         ) : (
           filteredMatches.map((item) => {
             const candidate = item.user;
+            const topTeachSkill = candidate.teachSkills?.[0]?.name || "Web Development";
+            const topLearnSkill = candidate.learnSkills?.[0]?.name || "UI/UX Design";
+
             return (
-              <div key={candidate._id} className="match-user-card glass-card">
+              <div key={candidate._id} className="swap-partner-card">
                 {/* CARD HEADER */}
-                <div className="card-top">
-                  <div className="user-avatar-wrapper">
+                <div className="card-header-row">
+                  <div className="partner-avatar-group">
                     <Avatar src={candidate.avatar} name={candidate.name} size="lg" />
-                    {item.isMutualMatch && (
-                      <span className="mutual-badge" title="Mutual Skill Swap Opportunity">
-                        🤝 Mutual
-                      </span>
-                    )}
+                    <span className="verified-badge" title="Verified Skill Partner">
+                      ✓
+                    </span>
                   </div>
 
-                  <div className="score-badge-circle" title="Match Percentage">
-                    <svg viewBox="0 0 36 36" className="circular-chart">
-                      <path
-                        className="circle-bg"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className="circle"
-                        strokeDasharray={`${item.matchScore}, 100`}
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <text x="18" y="20.35" className="percentage">
+                  <div className="partner-meta">
+                    <div className="meta-badge-row">
+                      <span className="rating-pill">⭐ {candidate.rating?.average || 4.8}</span>
+                      <span className="distance-pill">📍 2 km</span>
+                      <span className={`score-badge ${item.matchScore >= 80 ? "score-high" : "score-fair"}`}>
                         {item.matchScore}%
-                      </text>
-                    </svg>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* USER IDENTITY */}
-                <div className="user-identity">
-                  <h3>{candidate.name}</h3>
-                  <p className="college-course">
-                    🎓 {candidate.college || "University Student"}{" "}
-                    {candidate.course ? `• ${candidate.course}` : ""}
-                  </p>
-                  {candidate.bio && <p className="user-bio">"{candidate.bio}"</p>}
+                {/* USER IDENTITY & MATCH SUMMARY */}
+                <div className="partner-details">
+                  <h3 className="partner-name">{candidate.name}</h3>
+                  <span className="match-quality-label">
+                    Match Quality: {item.matchScore >= 80 ? "Strong Match 🔥" : "Fair Match ⚡"}
+                  </span>
+                  
+                  <div className="match-recommendation-box">
+                    <p>You can learn <strong>{topTeachSkill}</strong> from {candidate.name.split(" ")[0]}</p>
+                  </div>
                 </div>
 
-                {/* SKILLS OFFERED */}
-                <div className="skills-block">
-                  <span className="block-title title-teach">Teaches:</span>
-                  <div className="pills-wrap">
+                {/* OFFERS SKILL PILLS */}
+                <div className="skill-section">
+                  <span className="section-label">🏷️ Offers...</span>
+                  <div className="tag-cloud">
                     {candidate.teachSkills?.length > 0 ? (
                       candidate.teachSkills.map((s, idx) => (
-                        <span key={idx} className="skill-pill pill-teach">
+                        <span key={idx} className="offer-tag">
                           {s.name || s}
                         </span>
                       ))
                     ) : (
-                      <span className="none-text">General Tech</span>
+                      <span className="offer-tag">Web Development</span>
                     )}
                   </div>
                 </div>
 
-                {/* SKILLS WANTED */}
-                <div className="skills-block">
-                  <span className="block-title title-learn">Wants to Learn:</span>
-                  <div className="pills-wrap">
+                {/* LOOKING FOR SKILL PILLS */}
+                <div className="skill-section">
+                  <span className="section-label">🔍 Looking for...</span>
+                  <div className="tag-cloud">
                     {candidate.learnSkills?.length > 0 ? (
                       candidate.learnSkills.map((s, idx) => (
-                        <span key={idx} className="skill-pill pill-learn">
+                        <span key={idx} className="looking-tag">
                           {s.name || s}
                         </span>
                       ))
                     ) : (
-                      <span className="none-text">General Learning</span>
+                      <span className="looking-tag">UI/UX Design</span>
                     )}
                   </div>
                 </div>
 
-                {/* CARD ACTIONS */}
-                <div className="card-actions">
-                  <button onClick={() => openSwapModal(item)} className="btn-primary flex-1">
-                    Swap Skills 🤝
+                {/* CARD ACTION BUTTONS */}
+                <div className="card-actions-row">
+                  <button
+                    className="btn-chat-swap"
+                    onClick={() => navigate(`/chat/${candidate._id}`)}
+                  >
+                    💬 Chat to Swap
                   </button>
-                  <Link to={`/user/${candidate._id}`} className="btn-secondary">
-                    Profile
-                  </Link>
+                  <button
+                    className="btn-confirm-swap"
+                    onClick={() => openSwapModal(item)}
+                  >
+                    ☑️ Confirm Swap
+                  </button>
                 </div>
               </div>
             );
@@ -264,21 +325,21 @@ function Matches() {
 
       {/* SWAP REQUEST MODAL DIALOG */}
       {selectedCandidate && (
-        <div className="modal-overlay" onClick={closeSwapModal}>
-          <div className="modal-content glass-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Propose Skill Swap 🤝</h2>
-              <button className="close-btn" onClick={closeSwapModal}>
+        <div className="modal-backdrop" onClick={closeSwapModal}>
+          <div className="modal-dialog-box" onClick={(e) => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h2>Confirm Skill Swap Proposal 🤝</h2>
+              <button className="btn-close-dialog" onClick={closeSwapModal}>
                 ×
               </button>
             </div>
 
-            <p className="modal-subtitle">
-              Send an invitation to <strong>{selectedCandidate.name}</strong> to initiate a peer learning partnership.
+            <p className="dialog-sub">
+              Send an official skill exchange invitation to <strong>{selectedCandidate.name}</strong>.
             </p>
 
-            <form onSubmit={handleSendSwapRequest} className="swap-modal-form">
-              <div className="form-group">
+            <form onSubmit={handleSendSwapRequest} className="dialog-form">
+              <div className="dialog-field">
                 <label>Skill You Will Teach:</label>
                 <select
                   value={offeredSkill}
@@ -290,11 +351,11 @@ function Matches() {
                       {s.name || s}
                     </option>
                   ))}
-                  <option value="General Coding Guidance">General Coding Guidance</option>
+                  <option value="General Technical Skill">General Technical Skill</option>
                 </select>
               </div>
 
-              <div className="form-group">
+              <div className="dialog-field">
                 <label>Skill You Want {selectedCandidate.name} to Teach:</label>
                 <select
                   value={wantedSkill}
@@ -310,21 +371,21 @@ function Matches() {
                 </select>
               </div>
 
-              <div className="form-group">
+              <div className="dialog-field">
                 <label>Personal Invitation Note:</label>
                 <textarea
                   rows="3"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Introduce yourself and explain your learning availability..."
+                  placeholder="Introduce yourself and propose your preferred meeting time..."
                 />
               </div>
 
-              <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={closeSwapModal}>
+              <div className="dialog-actions">
+                <button type="button" className="btn-dialog-cancel" onClick={closeSwapModal}>
                   Cancel
                 </button>
-                <button type="submit" disabled={sendingRequest} className="btn-primary">
+                <button type="submit" disabled={sendingRequest} className="btn-dialog-send">
                   {sendingRequest ? "Sending..." : "Send Proposal 🚀"}
                 </button>
               </div>

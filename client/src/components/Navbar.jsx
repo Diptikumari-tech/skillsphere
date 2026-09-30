@@ -35,66 +35,84 @@ function Navbar() {
     loadUnreadNotifications();
   }, [currentUser, location.pathname]);
 
-  if (!currentUser) return null;
-
   const isActive = (path) => location.pathname === path;
 
   return (
     <header className="navbar-container">
       <nav className="navbar glass-nav">
-        <Link to="/dashboard" className="logo-brand">
+        <Link to={currentUser ? "/dashboard" : "/"} className="logo-brand">
           <div className="logo-icon">🔮</div>
           <span className="logo-text">SkillSphere</span>
           <span className="logo-badge">MERN</span>
         </Link>
 
-        <div className="nav-menu">
-          <Link to="/dashboard" className={`nav-item ${isActive("/dashboard") ? "active" : ""}`}>
-            📊 Dashboard
-          </Link>
-          <Link to="/matches" className={`nav-item ${isActive("/matches") ? "active" : ""}`}>
-            🎯 Matches
-          </Link>
-          <Link to="/skills" className={`nav-item ${isActive("/skills") ? "active" : ""}`}>
-            🧠 Skills
-          </Link>
-          <Link to="/requests" className={`nav-item ${isActive("/requests") ? "active" : ""}`}>
-            📨 Swap Requests
-          </Link>
-          <Link to="/connections" className={`nav-item ${isActive("/connections") ? "active" : ""}`}>
-            🤝 Connections
-          </Link>
-          <Link to="/sessions" className={`nav-item ${isActive("/sessions") ? "active" : ""}`}>
-            📅 Sessions
-          </Link>
-          <Link to="/reviews" className={`nav-item ${isActive("/reviews") ? "active" : ""}`}>
-            ⭐ Reviews
-          </Link>
-
-          <Link to="/notifications" className={`nav-item nav-notif ${isActive("/notifications") ? "active" : ""}`}>
-            🔔
-            {unreadCount > 0 && (
-              <span className="notif-badge">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
-            )}
-          </Link>
-
-          <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Dark/Light Mode">
-            {darkMode ? "☀️" : "🌙"}
-          </button>
-
-          <div className="user-profile-menu">
-            <Link to="/profile" className="profile-pill">
-              <Avatar src={currentUser.avatar} name={currentUser.name} size="sm" />
-              <span className="user-name-short">{currentUser.name?.split(" ")[0]}</span>
+        {currentUser ? (
+          /* LOGGED IN NAVIGATION MENU */
+          <div className="nav-menu">
+            <Link to="/dashboard" className={`nav-item ${isActive("/dashboard") ? "active" : ""}`}>
+              📊 Dashboard
+            </Link>
+            <Link to="/matches" className={`nav-item ${isActive("/matches") ? "active" : ""}`}>
+              🎯 Matches
+            </Link>
+            <Link to="/skills" className={`nav-item ${isActive("/skills") ? "active" : ""}`}>
+              🧠 Skills
+            </Link>
+            <Link to="/requests" className={`nav-item ${isActive("/requests") ? "active" : ""}`}>
+              📨 Requests
+            </Link>
+            <Link to="/connections" className={`nav-item ${isActive("/connections") ? "active" : ""}`}>
+              🤝 Connections
             </Link>
 
-            <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
-              🚪
+            <Link to="/notifications" className={`nav-item nav-notif ${isActive("/notifications") ? "active" : ""}`}>
+              🔔
+              {unreadCount > 0 && (
+                <span className="notif-badge">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </Link>
+
+            <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Dark/Light Mode">
+              {darkMode ? "☀️" : "🌙"}
             </button>
+
+            <div className="user-profile-menu">
+              <Link to="/profile" className="profile-pill" title="View / Edit Profile">
+                <Avatar src={currentUser.avatar} name={currentUser.name} size="sm" />
+                <span className="user-name-short">{currentUser.name?.split(" ")[0]}</span>
+              </Link>
+
+              <button className="logout-nav-btn" onClick={handleLogout} title="Logout">
+                🚪 Logout
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          /* LOGGED OUT / PUBLIC NAVIGATION MENU */
+          <div className="nav-menu">
+            <Link to="/" className={`nav-item ${isActive("/") ? "active" : ""}`}>
+              🏠 Home
+            </Link>
+            <Link to="/login" className={`nav-item ${isActive("/login") ? "active" : ""}`}>
+              🎯 Matches
+            </Link>
+            
+            <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Dark/Light Mode">
+              {darkMode ? "☀️" : "🌙"}
+            </button>
+
+            <div className="auth-nav-buttons">
+              <Link to="/login" className="btn-nav-login">
+                Login 🔑
+              </Link>
+              <Link to="/register" className="btn-nav-register">
+                Register 🚀
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   );
